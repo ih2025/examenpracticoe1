@@ -24,13 +24,16 @@ public class AuthorController {
     }
 
     @PostMapping
-    public Author createAuthor(@RequestBody Author author) {
-        return authorService.createAuthor(author);
+    public ResponseEntity<Author> createAuthor(@Valid @RequestBody Author author) {
+        Author created = authorService.createAuthor(author);
+        return ResponseEntity.ok(created);
     }
 
     @PutMapping("/{id}")
-    public Author updateAuthor(@PathVariable Long id, @RequestBody Author author) {
-        return authorService.updateAuthor(id, author);
+    public ResponseEntity<Author> updateAuthor(@PathVariable Long id, @Valid @RequestBody Author author) {
+        Author updated = authorService.updateAuthor(id, author);
+        if (updated == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
