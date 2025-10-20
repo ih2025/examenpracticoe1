@@ -32,4 +32,21 @@ public class BookController {
     public void deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Book> updateBookPartial(@PathVariable Long id, @RequestBody Book book) {
+        Book existing = bookService.getBookById(id);
+        if (existing == null) return ResponseEntity.notFound().build();
+
+        if (book.getTitle() != null && !book.getTitle().isBlank()) {
+            existing.setTitle(book.getTitle());
+        }
+        if (book.getPrice() != null) {
+            existing.setPrice(book.getPrice());
+        }
+
+        Book updated = bookService.createBook(existing); // save the changes
+        return ResponseEntity.ok(updated);
+    }
+
 }
